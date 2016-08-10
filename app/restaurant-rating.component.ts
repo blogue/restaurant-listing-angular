@@ -25,12 +25,10 @@ import {Restaurant} from './restaurant.model';
 })
 export class RestaurantRating {
   public restaurant: Restaurant;
-  public onSubmitNewRating: EventEmitter<string[]>;
-  constructor(){
-    this.onSubmitNewRating = new EventEmitter();
-  }
   addRating(restaurantRating: HTMLSelectElement, restaurantWaitTime: HTMLSelectElement){
-    var params: string[] = [restaurantRating.value, restaurantWaitTime.value];
-    this.onSubmitNewRating.emit(params);
+    this.restaurant.rating.push(parseInt(restaurantRating.value));
+    this.restaurant.waitTime.push(parseInt(restaurantWaitTime.value));
+    console.log(this.restaurant);
+    console.log(this.restaurant.waitTime);
   }
 }

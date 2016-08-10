@@ -6,13 +6,14 @@ import { ShowDetailsComponent} from './show-restaurant-details.component';
 import { EditRestaurantDetailsComponent} from './edit-restaurant-details.components';
 import { CuisinePipe } from './cuisine.pipe';
 import {RestaurantRating} from './restaurant-rating.component';
+import { ShowRatingDetails } from './show-rating-details.component';
 
 @Component({
   selector: 'restaurant-list',
   inputs: ["restaurantList"],
   outputs: ['onRestaurantSelect'],
   pipes: [CuisinePipe],
-  directives: [RestaurantComponent, NewRestaurantComponent, ShowDetailsComponent, EditRestaurantDetailsComponent, RestaurantRating],
+  directives: [RestaurantComponent, NewRestaurantComponent, ShowDetailsComponent, EditRestaurantDetailsComponent, RestaurantRating, ShowRatingDetails],
   template:`
   <div>
   <select id="selectCuisine" (change)="onChangeCuisine($event.target.value)" class="filter">
@@ -20,6 +21,8 @@ import {RestaurantRating} from './restaurant-rating.component';
     <option *ngFor="#restaurant of restaurantList" value="{{restaurant.cuisine}}">{{restaurant.cuisine}}</option>
   </select>
   <display-details *ngIf="selectedRestaurant" [restaurant]="selectedRestaurant"></display-details>
+  <display-rating *ngIf="selectedRestaurant"
+  [restaurant]="selectedRestaurant"></display-rating>
     <restaurant-display *ngFor="#currentRestaurant of restaurantList | cuisine:filterCuisine"
       (click)="restaurantClicked(currentRestaurant)"
       [class.selected]="currentRestaurant === selectedRestaurant"
@@ -31,8 +34,9 @@ import {RestaurantRating} from './restaurant-rating.component';
   <div class="container">
     <new-restaurant (onSubmitNewRestaurant)="createRestaurant($event)"></new-restaurant>
   </div>
-  <rate-restaurant   (onSubmitNewRating)="
-  COME BACK TO THIS SPOT!!!!!
+  <rate-restaurant *ngIf="selectedRestaurant" [restaurant]="selectedRestaurant">
+  </rate-restaurant>
+
 
   `
 })
@@ -53,11 +57,7 @@ export class RestaurantListComponent {
       new Restaurant(parameters[0], parameters[1], parameters[2], parameters[3])
     );
   }
-  createRating(parameters): void {
-    this.selectedRestaurant.rating.push(parameters[0]);
-    this.selectedRestaurant.waitTime.push(parameters[1]);
-    console.log(this.selectedRestaurant);
-  }
+
 
   onChangeCuisine(filterOption) {
     this.filterCuisine = filterOption;
